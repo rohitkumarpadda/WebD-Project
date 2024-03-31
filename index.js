@@ -4,6 +4,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const LoginData = require("./models/loginData");
+const bcrypt = require("bcrypt");
 mongoose.connect("mongodb://localhost:27017/LostAndFound", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -44,7 +45,7 @@ app.post("/login", async (req, res) => {
   try {
     // Find user by email
     const user = await LoginData.findOne({ email });
-    if (!user || user.password !== password) {
+    if (!user || !bcrypt.compareSync(password, user.password)) {
       // If user not found or password incorrect, show alert and redirect
       return res
         .status(401)
