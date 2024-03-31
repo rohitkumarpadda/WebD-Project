@@ -1,0 +1,139 @@
+body{
+    margin:0px;
+    padding : 0px;
+    box-sizing: border-box;
+    /* background-color: cyan; */
+}
+.container{
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid black ;
+    background-color: rgb(11, 11, 40);
+}
+nav{
+    /* width: 100%; */
+    height: 75px;
+    line-height:75px;
+    /* padding :0px 100px; */
+    /* position: fixed; */
+    
+
+}
+nav img{
+    /* font-size: 30px;
+    font-weight: bold;
+    color: white;
+    letter-spacing: 1.5; */
+    cursor: pointer;
+    transition: width 0.6s, height 0.6s;
+
+}
+nav img:hover{
+    width: 100px;
+}
+nav li{
+    display: inline-block;
+    list-style:none;margin:0px;
+    padding : 0px;
+    box-sizing: border-box;
+}
+nav li a{
+    font-size:18px;
+    text-transform:uppercase;
+    padding : 0px 30px;
+    color:white;
+    text-decoration: none;
+}
+nav li a:hover{
+    color: green;
+}
+
+.RecentlyLost{
+    margin-top: 50px;
+
+}
+.RecentlyLostHeading{
+    display: flex;
+    justify-content: space-around;
+    
+}
+.RecentlyLostHeading p{
+    border: 2px solid;
+    padding: 15px 40px;
+    border-radius: 15px;
+    background-color:#DAD5FF ;
+    font-weight: bold;
+}
+.box{
+    border: 50px 100px;
+    display: flex;
+    box-shadow: 2px 2px 15px black;
+}
+
+.CantFindYourItem{
+    width: 400px;
+    /* justify-content: space-between; */
+    margin-left: 37%;
+}
+.CantFindYourItem p{
+    text-align: center;
+}
+.RegisterDivLost{
+    display:flex;
+    margin-top:70px;
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-bottom: 70px;
+    box-shadow: 2px 2px 15px #a9a8a8;
+    background-color: white;
+}
+.RegisterImgLost img{
+    margin-top: 30px;
+    /* background-image: url(RegistrationImage.avif); */
+    transform: scale(.95);
+    
+}
+.formRLost {
+    width: 50%; /* Adjust this width as needed */
+    /* text-align: center;  */
+    margin-bottom: 60px;
+}
+
+.formRLost form {
+    width: 100%;
+    /* text-align: center; */
+}
+.formRLost form input,
+.formRLost form select,
+.formRLost form textarea {
+    width: 80%;
+    box-sizing: border-box;
+    padding : 9px 18px;
+    border-radius: 18px;
+    background-color: lightcyan;
+    border: cyan;
+}
+.formRLost form input:focus,
+.formRLost form select:focus,
+.formRLost form textarea:focus {
+    
+    background-color: cyan;
+}
+.formRLost label{
+    font-size: 18px;
+    font-weight: bold;
+}
+.button{
+    background-color: rgb(11, 11, 40);
+    padding: 10px 30px;
+    font-size: 20;
+    cursor: pointer;
+    color: white;
+    border: white;
+    border-radius: 10px;
+    text-decoration: none;
+}
+.button:hover {
+    transform: scale(1.1);
+    transition: .5s;
+}

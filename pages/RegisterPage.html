@@ -1,0 +1,89 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ReportLost</title>
+
+    <link rel="stylesheet" href="/css/RegisterPageStylesheet.css" />
+  </head>
+  <body style="width: 100%">
+    <div class="maindiv">
+      <nav>
+        <div class="container">
+          <div class="logo">
+            <!-- <p style="color: white;">IIITA</p> -->
+            <a href="/"
+              ><img
+                src="/assets/img/iiitaLogo.png"
+                alt="IIITA"
+                style="
+                  height: 90px;
+                  cursor: pointer;
+                  width: 90px;
+                  margin-left: 50px;
+                  margin-top: 10px;
+                "
+            /></a>
+          </div>
+          <div class="nav">
+            <ul>
+              <li><a href="/">Home</a></li>
+              <li><a href="index.html#AbtUs">About Us</a></li>
+              <li><a href="#">Profile</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div class="RegisterDiv">
+        <div class="RegisterImg">
+          <img src="/assets/img/RegistrationImage.avif" alt="Img" />
+        </div>
+        <div class="formR">
+          <p style="font-size: 35px; color: rgb(11, 11, 40)">
+            Report the Found Item here
+          </p>
+          <form action="">
+            <label for="Name">Name : </label><br />
+            <input type="text" id="Name" placeholder="Your Name Here" />
+            <br /><br />
+            <label for="ContactNo">Mobile No. : </label><br />
+            <input
+              type="number"
+              id="ContactNo"
+              placeholder="Enter Mobile No."
+            />
+            <br /><br />
+            <label for="category">Select category : </label><br />
+            <select id="category">
+              <option value="electronics">Electronics</option>
+              <option value="IDCard">ID Card</option>
+              <option value="Stationary">Stationary Items</option>
+              <option value="others">Others</option>
+            </select>
+            <br /><br />
+            <label for="Item">Item : </label><br />
+            <input type="text" id="Item" placeholder="Enter Found Item" />
+            <br /><br />
+            <label for="DateFound">When the Item was Found</label><br />
+            <input type="date" id="DateFound" />
+            <br /><br />
+            <label for="Description">Found where? : </label><br />
+            <textarea
+              name="Description"
+              id="Description"
+              cols="30"
+              rows="10"
+              placeholder="Enter the details where did you find"
+            ></textarea>
+            <br /><br />
+            <label for="Image">Upload an Image of Found Item : </label><br />
+            <input type="file" id="Image" />
+            <br /><br /><br /><br />
+            <button class="Button" style="margin-left: 160px">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
