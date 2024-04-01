@@ -81,14 +81,19 @@ app.get("/logout", (req, res) => {
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await LoginData.findOne({ email });
-    if (!user || !bcrypt.compareSync(password, user.password)) {
-      return res
-        .status(401)
-        .send(
-          "<script>alert('Invalid email or password. Please try again.'); window.location.href = '/login';</script>"
-        );
+    // Validate email format
+    if (!isValidEmail(email)) {
+      return res.status(400).send("Invalid email format");
     }
+
+    // Use Mongoose's findOne method with query building
+    const user = await LoginData.findOne({ email: email });
+
+    // Check if user exists and validate password
+    if (!user || !bcrypt.compareSync(password, user.password)) {
+      return res.status(401).send("Invalid email or password");
+    }
+
     req.session.loggedInUser = user;
     res.redirect("/afterlogin");
   } catch (err) {
@@ -96,3 +101,9 @@ app.post("/login", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+function isValidEmail(email) {
+  const re =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}
