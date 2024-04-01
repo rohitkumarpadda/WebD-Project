@@ -1,3 +1,5 @@
+require("dotenv").config(); // Load environment variables
+
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -7,7 +9,9 @@ const LoginData = require("./models/loginData");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const rateLimit = require("express-rate-limit");
-mongoose.connect("mongodb://localhost:27017/LostAndFound", {
+
+// MongoDB connection
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -16,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(
   session({
-    secret: "$2b$10$RNoYDxTB/wd1wZhnUqCnV.Jmmp62zisa.eTfF7EhMWhm0GKzrh7yu",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     //add cookie:{secure: true}, in production
@@ -32,8 +36,8 @@ app.use(rateLimiter);
 
 app.use(express.static("./public"));
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on port ${process.env.PORT}`);
 });
 
 const isLoggedIn = (req, res, next) => {
