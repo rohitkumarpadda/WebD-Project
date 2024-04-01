@@ -81,17 +81,18 @@ app.get("/logout", (req, res) => {
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
-    // Validate email format
     if (!isValidEmail(email)) {
       return res.status(400).send("Invalid email format");
     }
 
-    // Use Mongoose's findOne method with query building
     const user = await LoginData.findOne({ email: { $eq: email } });
 
-    // Check if user exists and validate password
     if (!user || !bcrypt.compareSync(password, user.password)) {
-      return res.status(401).send("Invalid email or password");
+      return res
+        .status(401)
+        .send(
+          "<script>alert('Invalid email or password. Please try again.'); window.location.href = '/login';</script>"
+        );
     }
 
     req.session.loggedInUser = user;
