@@ -6,11 +6,13 @@ const bodyParser = require("body-parser");
 const LoginData = require("./models/loginData");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
-
+const rateLimit = require("express-rate-limit");
 mongoose.connect("mongodb://localhost:27017/LostAndFound", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(
   session({
@@ -20,6 +22,13 @@ app.use(
     //add cookie:{secure: true}, in production
   })
 );
+
+const rateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
+
+app.use(limiter);
 
 app.use(express.static("./public"));
 
@@ -64,7 +73,6 @@ app.get("/logout", (req, res) => {
     res.redirect("/");
   });
 });
-app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
