@@ -87,7 +87,7 @@ app.post("/login", async (req, res) => {
     }
 
     // Use Mongoose's findOne method with query building
-    const user = await LoginData.findOne({ email: req.body.email });
+    const user = await LoginData.findOne({ email: { $eq: email } });
 
     // Check if user exists and validate password
     if (!user || !bcrypt.compareSync(password, user.password)) {
