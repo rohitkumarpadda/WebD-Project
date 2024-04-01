@@ -9,7 +9,9 @@ const LoginData = require("./models/loginData");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const rateLimit = require("express-rate-limit");
-
+const multer = require("multer");
+const FoundItem = require("./models/foundItem");
+const LostItem = require("./models/lostItem");
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
@@ -108,3 +110,70 @@ function isValidEmail(email) {
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
 }
+
+app.use(express.json());
+
+const upload = multer({
+  dest: "uploads/",
+  limits: { fileSize: 5 * 1024 * 1024 },
+}); // 5MB limit
+
+// Route to handle form submission and file upload
+app.post(
+  "/reportFound",
+  isLoggedIn,
+  upload.single("Image"),
+  async (req, res) => {
+    try {
+      const { Name, ContactNo, category, Item, DateFound, Description } =
+        req.body;
+      const imageUrl = req.file.path; // Assuming the image is stored in the 'uploads' directory
+
+      const foundItem = new FoundItem({
+        name: Name,
+        contactNo: ContactNo,
+        category: category,
+        item: Item,
+        dateFound: DateFound,
+        description: Description,
+        image: imageUrl,
+        userEmail: req.session.loggedInUser.email,
+      });
+
+      await foundItem.save();
+      res.status(201).send("Item reported successfully");
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("Error reporting item");
+    }
+  }
+);
+
+app.post(
+  "/reportLost",
+  isLoggedIn,
+  upload.single("Image"),
+  async (req, res) => {
+    try {
+      const { Name, ContactNo, category, Item, DateLost, Description } =
+        req.body;
+      const imageUrl = req.file.path;
+
+      const lostItem = new LostItem({
+        name: Name,
+        contactNo: ContactNo,
+        category: category,
+        item: Item,
+        dateLost: DateLost,
+        description: Description,
+        image: imageUrl,
+      });
+
+      await lostItem.save();
+      res.status(201).send("Item reported as lost successfully");
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error reporting lost item");
+    }
+  }
+);
