@@ -28,7 +28,7 @@ const rateLimiter = rateLimit({
   max: 100,
 });
 
-app.use(limiter);
+app.use(rateLimiter);
 
 app.use(express.static("./public"));
 
