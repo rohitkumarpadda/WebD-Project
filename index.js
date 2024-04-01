@@ -58,7 +58,7 @@ app.get("/reportFound", isLoggedIn, (req, res) => {
 app.get("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
-      return res.redirect("/afterlogin");
+      return res.redirect("/login");
     }
     res.clearCookie("sid");
     res.redirect("/");
