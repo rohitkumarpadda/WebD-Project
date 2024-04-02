@@ -210,8 +210,8 @@ app.get("/searchInLostItems", isLoggedIn, async (req, res) => {
     const query = {};
 
     if (category && item) {
-      query.category = category;
-      query.item = item;
+      query.category = { $eq: category };
+      query.item = { $eq: item };
     } else {
       res.json([
         {
@@ -239,8 +239,8 @@ app.get("/searchInFoundItems", isLoggedIn, async (req, res) => {
     const query = {};
 
     if (category && item) {
-      query.category = category;
-      query.item = item;
+      query.category = { $eq: category };
+      query.item = { $eq: item };
     } else {
       res.json([
         {
