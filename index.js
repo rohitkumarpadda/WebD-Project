@@ -50,27 +50,41 @@ const isLoggedIn = (req, res, next) => {
   }
 };
 
+//Routes
+
+//route for homepage
 app.get("/", (req, res) => {
+  console.log("index page route");
   res.sendFile(path.join(__dirname, "pages/index.html"));
 });
 
+//route for login
 app.get("/login", (req, res) => {
+  console.log("login route");
   res.sendFile(path.join(__dirname, "pages/final login page.html"));
 });
 
+//route for afterlogin pages
 app.get("/afterlogin", isLoggedIn, (req, res) => {
+  console.log("after login route");
   res.sendFile(path.join(__dirname, "pages/AfterLoginPage1.html"));
 });
 
+//route for lost form
 app.get("/reportLost", isLoggedIn, (req, res) => {
+  console.log("lost form route");
   res.sendFile(path.join(__dirname, "pages/LostReportPage.html"));
 });
 
+//route for found form
 app.get("/reportFound", isLoggedIn, (req, res) => {
+  console.log("found form route");
   res.sendFile(path.join(__dirname, "pages/RegisterPage.html"));
 });
 
+//logout route
 app.get("/logout", (req, res) => {
+  console.log("logoout route");
   req.session.destroy((err) => {
     if (err) {
       return res.redirect("/login");
@@ -80,7 +94,9 @@ app.get("/logout", (req, res) => {
   });
 });
 
+//User login
 app.post("/login", async (req, res) => {
+  console.log("login logic route");
   const { email, password } = req.body;
   try {
     if (!isValidEmail(email)) {
@@ -105,6 +121,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
+//Email Validation
 function isValidEmail(email) {
   const re =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -113,10 +130,10 @@ function isValidEmail(email) {
 
 app.use(express.json());
 
+//multer config
 const storage = multer.diskStorage({
   destination: "uploads/",
   filename: function (req, file, cb) {
-    // Use the original filename with a timestamp to ensure uniqueness
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     const extension = path.extname(file.originalname);
     cb(null, file.fieldname + "-" + uniqueSuffix + extension);
@@ -128,6 +145,7 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 },
 }); // 5MB limit
 
+// Route to handle form submission and file upload for found items
 // Route to handle form submission and file upload
 app.post(
   "/reportFound",
@@ -151,7 +169,7 @@ app.post(
       });
 
       await foundItem.save();
-      res.status(201).redirect("/searchFoundItems");
+      res.redirect("/searchInLostItems?category=" + category + "&item=" + Item);
     } catch (error) {
       console.log(error);
       res
@@ -184,7 +202,7 @@ app.post(
       });
 
       await lostItem.save();
-      res.status(201).redirect("/searchLostItems");
+      res.redirect("/searchInFoundItems?category=" + category + "&item=" + Item);
     } catch (error) {
       console.error(error);
       res
@@ -196,42 +214,60 @@ app.post(
   }
 );
 
-app.get("/searchLostItems", isLoggedIn, async (req, res) => {
+app.get("/searchInLostItems", isLoggedIn, async (req, res) => {
+  console.log("Entering searchInLostItems route");
   try {
     const { category, item } = req.query;
+    const query = {};
 
-    const foundItems = await FoundItem.find({
-      category: {
-        $regex: new RegExp(category, "i"),
-      },
-      item: {
-        $regex: new RegExp(item, "i"),
-      },
-    });
+    if (category && item) {
+      query.category = category;
+      query.item = item;
+    } else {
+      res.json([
+        {
+          category: "No category found",
+          item: "No item found",
+        },
+      ]);
+      return;
+    }
+
+    const lostItems = await LostItem.find(query);
+
+    res.json(lostItems);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error searching for items");
+  }
+  console.log("End of searchInLostItems route");
+});
+
+app.get("/searchInFoundItems", isLoggedIn, async (req, res) => {
+  console.log("Entering searchInFoundItems route");
+  try {
+    const { category, item } = req.query;
+    const query = {};
+
+    if (category && item) {
+      query.category = category;
+      query.item = item;
+    } else {
+      res.json([
+        {
+          category: "No category found",
+          item: "No item found",
+        },
+      ]);
+      return;
+    }
+
+    const foundItems = await FoundItem.find(query);
 
     res.json(foundItems);
   } catch (error) {
     console.error(error);
     res.status(500).send("Error searching for items");
   }
-});
-
-app.get("/searchFoundItems", isLoggedIn, async (req, res) => {
-  try {
-    const { category, item } = req.query;
-
-    const lostitems = await LostItem.find({
-      category: {
-        $regex: new RegExp(category, "i"),
-      },
-      item: {
-        $regex: new RegExp(item, "i"),
-      },
-    });
-
-    res.json(lostitems);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error searching for found items");
-  }
+  console.log("End of searchInFoundItems route");
 });
