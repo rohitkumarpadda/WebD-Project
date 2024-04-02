@@ -1,5 +1,4 @@
 require("dotenv").config();
-
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -12,6 +11,7 @@ const rateLimit = require("express-rate-limit");
 const multer = require("multer");
 const FoundItem = require("./models/foundItem");
 const LostItem = require("./models/lostItem");
+
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
@@ -113,8 +113,18 @@ function isValidEmail(email) {
 
 app.use(express.json());
 
+const storage = multer.diskStorage({
+  destination: "uploads/",
+  filename: function (req, file, cb) {
+    // Use the original filename with a timestamp to ensure uniqueness
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const extension = path.extname(file.originalname);
+    cb(null, file.fieldname + "-" + uniqueSuffix + extension);
+  },
+});
+
 const upload = multer({
-  dest: "uploads/",
+  storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 },
 }); // 5MB limit
 
@@ -141,10 +151,14 @@ app.post(
       });
 
       await foundItem.save();
-      res.status(201).send("Item reported successfully");
+      res.status(201).redirect("/searchFoundItems");
     } catch (error) {
       console.log(error);
-      res.status(500).send("Error reporting item");
+      res
+        .status(500)
+        .send(
+          "<script>alert('Error reporting item. Please try again.'); window.location.href = '/reportFound';</script>"
+        );
     }
   }
 );
@@ -170,10 +184,54 @@ app.post(
       });
 
       await lostItem.save();
-      res.status(201).send("Item reported as lost successfully");
+      res.status(201).redirect("/searchLostItems");
     } catch (error) {
       console.error(error);
-      res.status(500).send("Error reporting lost item");
+      res
+        .status(500)
+        .send(
+          "<script>alert('Error reporting item. Please try again.'); window.location.href = '/reportLost';</script>"
+        );
     }
   }
 );
+
+app.get("/searchLostItems", isLoggedIn, async (req, res) => {
+  try {
+    const { category, item } = req.query;
+
+    const foundItems = await FoundItem.find({
+      category: {
+        $regex: new RegExp(category, "i"),
+      },
+      item: {
+        $regex: new RegExp(item, "i"),
+      },
+    });
+
+    res.json(foundItems);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error searching for items");
+  }
+});
+
+app.get("/searchFoundItems", isLoggedIn, async (req, res) => {
+  try {
+    const { category, item } = req.query;
+
+    const lostitems = await LostItem.find({
+      category: {
+        $regex: new RegExp(category, "i"),
+      },
+      item: {
+        $regex: new RegExp(item, "i"),
+      },
+    });
+
+    res.json(lostitems);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error searching for found items");
+  }
+});
