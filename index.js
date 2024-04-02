@@ -50,39 +50,31 @@ const isLoggedIn = (req, res, next) => {
   }
 };
 
-//Routes
-
-//route for homepage
 app.get("/", (req, res) => {
   console.log("index page route");
   res.sendFile(path.join(__dirname, "pages/index.html"));
 });
 
-//route for login
 app.get("/login", (req, res) => {
   console.log("login route");
   res.sendFile(path.join(__dirname, "pages/final login page.html"));
 });
 
-//route for afterlogin pages
 app.get("/afterlogin", isLoggedIn, (req, res) => {
   console.log("after login route");
   res.sendFile(path.join(__dirname, "pages/AfterLoginPage1.html"));
 });
 
-//route for lost form
 app.get("/reportLost", isLoggedIn, (req, res) => {
   console.log("lost form route");
   res.sendFile(path.join(__dirname, "pages/LostReportPage.html"));
 });
 
-//route for found form
 app.get("/reportFound", isLoggedIn, (req, res) => {
   console.log("found form route");
   res.sendFile(path.join(__dirname, "pages/RegisterPage.html"));
 });
 
-//logout route
 app.get("/logout", (req, res) => {
   console.log("logoout route");
   req.session.destroy((err) => {
@@ -94,7 +86,6 @@ app.get("/logout", (req, res) => {
   });
 });
 
-//User login
 app.post("/login", async (req, res) => {
   console.log("login logic route");
   const { email, password } = req.body;
@@ -121,7 +112,6 @@ app.post("/login", async (req, res) => {
   }
 });
 
-//Email Validation
 function isValidEmail(email) {
   const re =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -130,7 +120,6 @@ function isValidEmail(email) {
 
 app.use(express.json());
 
-//multer config
 const storage = multer.diskStorage({
   destination: "uploads/",
   filename: function (req, file, cb) {
@@ -143,10 +132,8 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 },
-}); // 5MB limit
+});
 
-// Route to handle form submission and file upload for found items
-// Route to handle form submission and file upload
 app.post(
   "/reportFound",
   isLoggedIn,
@@ -155,7 +142,7 @@ app.post(
     try {
       const { Name, ContactNo, category, Item, DateFound, Description } =
         req.body;
-      const imageUrl = req.file.path; // Assuming the image is stored in the 'uploads' directory
+      const imageUrl = req.file.path;
 
       const foundItem = new FoundItem({
         name: Name,
@@ -202,7 +189,9 @@ app.post(
       });
 
       await lostItem.save();
-      res.redirect("/searchInFoundItems?category=" + category + "&item=" + Item);
+      res.redirect(
+        "/searchInFoundItems?category=" + category + "&item=" + Item
+      );
     } catch (error) {
       console.error(error);
       res
