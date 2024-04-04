@@ -19,7 +19,7 @@ const foundItemSchema = new Schema(
       type: String,
       required: true,
     },
-    dateFound: {
+    date: {
       type: Date,
       required: true,
     },
