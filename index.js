@@ -75,6 +75,11 @@ app.get("/reportFound", isLoggedIn, (req, res) => {
   res.sendFile(path.join(__dirname, "pages/RegisterPage.html"));
 });
 
+app.get("/results", isLoggedIn, (req, res) => {
+  console.log("results route");
+  res.sendFile(path.join(__dirname, "pages/results.html"));
+});
+
 app.get("/logout", (req, res) => {
   console.log("logoout route");
   req.session.destroy((err) => {
@@ -147,16 +152,17 @@ app.post(
       const foundItem = new FoundItem({
         name: Name,
         contactNo: ContactNo,
-        category: category,
-        item: Item,
-        dateFound: DateFound,
+        category: category.toLowerCase(),
+        item: Item.toLowerCase(),
+        date: DateFound,
         description: Description,
         image: imageUrl,
         userEmail: req.session.loggedInUser.email,
       });
 
       await foundItem.save();
-      res.redirect("/searchInLostItems?category=" + category + "&item=" + Item);
+
+      res.redirect(`/results?category=${category}&item=${Item}&type=found`);
     } catch (error) {
       console.log(error);
       res
@@ -181,17 +187,17 @@ app.post(
       const lostItem = new LostItem({
         name: Name,
         contactNo: ContactNo,
-        category: category,
-        item: Item,
-        dateLost: DateLost,
+        category: category.toLowerCase(),
+        item: Item.toLowerCase(),
+        date: DateLost,
         description: Description,
         image: imageUrl,
+        userEmail: req.session.loggedInUser.email, 
       });
 
       await lostItem.save();
-      res.redirect(
-        "/searchInFoundItems?category=" + category + "&item=" + Item
-      );
+
+      res.redirect(`/results?category=${category}&item=${Item}&type=lost`);
     } catch (error) {
       console.error(error);
       res
@@ -203,60 +209,36 @@ app.post(
   }
 );
 
-app.get("/searchInLostItems", isLoggedIn, async (req, res) => {
-  console.log("Entering searchInLostItems route");
+app.get("/searchItems", isLoggedIn, async (req, res) => {
   try {
-    const { category, item } = req.query;
+    const { category, item, type } = req.query;
     const query = {};
 
-    if (category && item) {
+    if (category && item && type) {
       query.category = { $eq: category };
       query.item = { $eq: item };
     } else {
-      res.json([
-        {
-          category: "No category found",
-          item: "No item found",
-        },
-      ]);
-      return;
+      return res.status(400).json({
+        error: "Missing parameters",
+        message: "Please provide category, item, and type parameters",
+      });
     }
 
-    const lostItems = await LostItem.find(query);
-
-    res.json(lostItems);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error searching for items");
-  }
-  console.log("End of searchInLostItems route");
-});
-
-app.get("/searchInFoundItems", isLoggedIn, async (req, res) => {
-  console.log("Entering searchInFoundItems route");
-  try {
-    const { category, item } = req.query;
-    const query = {};
-
-    if (category && item) {
-      query.category = { $eq: category };
-      query.item = { $eq: item };
+    let searchItems;
+    if (type === "found") {
+      searchItems = await LostItem.find(query);
+    } else if (type === "lost") {
+      searchItems = await FoundItem.find(query);
     } else {
-      res.json([
-        {
-          category: "No category found",
-          item: "No item found",
-        },
-      ]);
-      return;
+      return res.status(400).json({
+        error: "Invalid type parameter",
+        message: "Type parameter must be 'found' or 'lost'",
+      });
     }
 
-    const foundItems = await FoundItem.find(query);
-
-    res.json(foundItems);
+    res.json(searchItems);
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error searching for items");
+    res.status(500).json({ error: "Internal Server Error" });
   }
-  console.log("End of searchInFoundItems route");
 });
