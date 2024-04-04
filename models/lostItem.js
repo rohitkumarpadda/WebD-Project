@@ -30,6 +30,10 @@ const lostItemSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    userEmail: {
+      type: String,
+      required: true,
+    },
   },
   { collection: "LostItems" }
 );

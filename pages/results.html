@@ -46,10 +46,10 @@
           return;
         }
 
-        data.forEach((item) => {
+        data.forEach((data) => {
           const itemElement = document.createElement("div");
           itemElement.classList.add("search-item");
-          const date = new Date(item.date);
+          const date = new Date(data.date);
 
           const day = date.getDate().toString().padStart(2, "0");
           const month = (date.getMonth() + 1).toString().padStart(2, "0");
@@ -57,13 +57,13 @@
 
           const formattedDate = `${day}-${month}-${year}`;
           itemElement.innerHTML = `
-            <p>Name: ${item.name}</p>
-            <p>Contact No: ${item.contactNo}</p>
-            <p>Email: ${item.userEmail}</p>
-            <p>Category: ${item.category}</p>
-            <p>Item: ${item.item}</p>
+            <p>Name: ${data.name}</p>
+            <p>Contact No: ${data.contactNo}</p>
+            <p>Email: ${data.userEmail}</p>
+            <p>Category: ${data.category}</p>
+            <p>Item: ${data.item}</p>
             <p>Date: ${formattedDate}</p>
-            <p>Description: ${item.description}</p>
+            <p>Description: ${data.description}</p>
             <!-- Add more properties as needed -->
         `;
           searchResultsContainer.appendChild(itemElement);
