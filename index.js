@@ -36,7 +36,8 @@ const rateLimiter = rateLimit({
 
 app.use(rateLimiter);
 
-app.use(express.static("./public"));
+app.use(express.static(path.join(__dirname, "public")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
@@ -50,6 +51,7 @@ const isLoggedIn = (req, res, next) => {
   }
 };
 
+// Routes
 app.get("/", (req, res) => {
   console.log("index page route");
   res.sendFile(path.join(__dirname, "pages/index.html"));
@@ -91,6 +93,7 @@ app.get("/logout", (req, res) => {
   });
 });
 
+// Login logic
 app.post("/login", async (req, res) => {
   console.log("login logic route");
   const { email, password } = req.body;
@@ -117,6 +120,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
+// Middleware to validate email format
 function isValidEmail(email) {
   const re =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -125,6 +129,7 @@ function isValidEmail(email) {
 
 app.use(express.json());
 
+// Multer configuration for file upload
 const storage = multer.diskStorage({
   destination: "uploads/",
   filename: function (req, file, cb) {
@@ -139,6 +144,7 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 },
 });
 
+// Handling reportFound form submission
 app.post(
   "/reportFound",
   isLoggedIn,
@@ -147,7 +153,7 @@ app.post(
     try {
       const { Name, ContactNo, category, Item, DateFound, Description } =
         req.body;
-      const imageUrl = req.file.path;
+      const imageUrl = req.file.path.replace(/\\/g, "/"); // Replace backslashes with forward slashes
 
       const foundItem = new FoundItem({
         name: Name,
@@ -174,6 +180,7 @@ app.post(
   }
 );
 
+// Handling reportLost form submission
 app.post(
   "/reportLost",
   isLoggedIn,
@@ -182,7 +189,7 @@ app.post(
     try {
       const { Name, ContactNo, category, Item, DateLost, Description } =
         req.body;
-      const imageUrl = req.file.path;
+      const imageUrl = req.file.path.replace(/\\/g, "/"); // Replace backslashes with forward slashes
 
       const lostItem = new LostItem({
         name: Name,
@@ -192,7 +199,7 @@ app.post(
         date: DateLost,
         description: Description,
         image: imageUrl,
-        userEmail: req.session.loggedInUser.email, 
+        userEmail: req.session.loggedInUser.email,
       });
 
       await lostItem.save();
@@ -209,6 +216,7 @@ app.post(
   }
 );
 
+// Searching items
 app.get("/searchItems", isLoggedIn, async (req, res) => {
   try {
     const { category, item, type } = req.query;
