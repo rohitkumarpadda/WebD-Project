@@ -21,15 +21,15 @@ const foundItemSchema = new Schema(
     },
     date: {
       type: Date,
-      required: true,
+      required: false,
     },
     description: {
       type: String,
-      required: true,
+      required: false,
     },
     image: {
       type: String,
-      required: true,
+      required: false,
     },
     userEmail: {
       type: String,

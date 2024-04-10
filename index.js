@@ -153,7 +153,8 @@ app.post(
     try {
       const { Name, ContactNo, category, Item, DateFound, Description } =
         req.body;
-      const imageUrl = req.file.path.replace(/\\/g, "/"); // Replace backslashes with forward slashes
+      let imageUrl = "";
+      if (req.file) imageUrl = req.file.path.replace(/\\/g, "/"); // Replace backslashes with forward slashes
 
       const foundItem = new FoundItem({
         name: Name,
@@ -189,7 +190,8 @@ app.post(
     try {
       const { Name, ContactNo, category, Item, DateLost, Description } =
         req.body;
-      const imageUrl = req.file.path.replace(/\\/g, "/"); // Replace backslashes with forward slashes
+      let imageUrl = "";
+      if (req.file) imageUrl = req.file.path.replace(/\\/g, "/"); // Replace backslashes with forward slashes
 
       const lostItem = new LostItem({
         name: Name,
