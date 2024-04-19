@@ -11,6 +11,7 @@ const rateLimit = require("express-rate-limit");
 const multer = require("multer");
 const FoundItem = require("./models/foundItem");
 const LostItem = require("./models/lostItem");
+const csrf = require("lusca").csrf;
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
@@ -25,9 +26,11 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie:{secure: true},
+    cookie: { secure: true },
   })
 );
+
+app.use(csrf());
 
 const rateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
