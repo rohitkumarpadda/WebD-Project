@@ -26,7 +26,8 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    //cookie: { secure: true },
+    //cookie: { secure: true },add in production
+    cookie: { maxAge: 1000 * 60 * 30 },
   })
 );
 
@@ -53,8 +54,6 @@ function csrfProtection(req, res, next) {
   const csrfToken = req.session.csrfToken;
   const submittedToken =
     req.body._csrf || req.query._csrf || req.headers["x-csrf-token"];
-  console.log(submittedToken);
-  console.log(csrfToken);
   if (!submittedToken || submittedToken !== csrfToken) {
     return res.status(403).send("CSRF token mismatch");
   }
@@ -196,7 +195,6 @@ app.post(
   "/reportFound",
   isLoggedIn,
   upload.single("Image"),
-  csrfProtection,
   async (req, res) => {
     try {
       const { Name, ContactNo, category, Item, DateFound, Description } =
@@ -233,7 +231,6 @@ app.post(
 app.post(
   "/reportLost",
   isLoggedIn,
-  csrfProtection,
   upload.single("Image"),
   async (req, res) => {
     console.log(req.body);
@@ -282,7 +279,6 @@ app.get("/searchItems", isLoggedIn, async (req, res) => {
         message: "Please provide category, item, and type parameters",
       });
     }
-
     let searchItems;
     if (type === "found") {
       searchItems = await LostItem.find(query);
