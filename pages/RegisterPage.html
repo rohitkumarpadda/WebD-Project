@@ -95,10 +95,18 @@
             <label for="Image">Upload an Image of Found Item : </label><br />
             <input type="file" id="Image" name="Image" />
             <br /><br /><br /><br />
+            <input type="hidden" name="_csrf" value="" />
             <button class="Button" style="margin-left: 160px">Submit</button>
           </form>
         </div>
       </div>
     </div>
+    <script>
+      fetch("/csrf-token")
+        .then((response) => response.json())
+        .then((data) => {
+          document.querySelector('input[name="_csrf"]').value = data.csrfToken;
+        });
+    </script>
   </body>
 </html>

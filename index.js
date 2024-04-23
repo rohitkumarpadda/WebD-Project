@@ -196,6 +196,7 @@ app.post(
   "/reportFound",
   isLoggedIn,
   upload.single("Image"),
+  csrfProtection,
   async (req, res) => {
     try {
       const { Name, ContactNo, category, Item, DateFound, Description } =
@@ -232,6 +233,7 @@ app.post(
 app.post(
   "/reportLost",
   isLoggedIn,
+  csrfProtection,
   upload.single("Image"),
   async (req, res) => {
     console.log(req.body);
