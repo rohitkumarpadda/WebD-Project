@@ -30,6 +30,7 @@
                 required
               />
             </div>
+            <input type="hidden" name="_csrf" value="" />
           </div>
           <div class="btn-field">
             <button type="submit">Sign IN</button>
@@ -51,6 +52,13 @@
         signinBtn.classList.remove("disable");
         forgotpass.style.display = "block";
       };
+    </script>
+    <script>
+      fetch("/csrf-token")
+        .then((response) => response.json())
+        .then((data) => {
+          document.querySelector('input[name="_csrf"]').value = data.csrfToken;
+        });
     </script>
   </body>
 </html>

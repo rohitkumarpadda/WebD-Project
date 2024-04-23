@@ -11,7 +11,9 @@ const rateLimit = require("express-rate-limit");
 const multer = require("multer");
 const FoundItem = require("./models/foundItem");
 const LostItem = require("./models/lostItem");
-const csrf = require("lusca").csrf;
+const helmet = require("helmet");
+const crypto = require("crypto");
+const cors = require("cors");
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
@@ -19,18 +21,62 @@ mongoose.connect(process.env.MONGODB_URI, {
   useUnifiedTopology: true,
 });
 
-app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true },
+    //cookie: { secure: true },
   })
 );
 
-app.use(csrf());
+app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.use(cors());
+
+function generateCSRFToken() {
+  console.log("generate csrf token");
+  return crypto.randomBytes(32).toString("hex");
+}
+
+app.use((req, res, next) => {
+  if (!req.session.csrfToken) {
+    req.session.csrfToken = generateCSRFToken();
+  }
+  res.locals.csrfToken = req.session.csrfToken;
+  next();
+});
+
+function csrfProtection(req, res, next) {
+  const csrfToken = req.session.csrfToken;
+  const submittedToken =
+    req.body._csrf || req.query._csrf || req.headers["x-csrf-token"];
+  console.log(submittedToken);
+  console.log(csrfToken);
+  if (!submittedToken || submittedToken !== csrfToken) {
+    return res.status(403).send("CSRF token mismatch");
+  }
+
+  next();
+}
+
+app.get("/csrf-token", (req, res) => {
+  res.json({ csrfToken: req.session.csrfToken });
+  console.log("csrf token route");
+});
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+      },
+    },
+  })
+);
 
 const rateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -86,7 +132,7 @@ app.get("/results", isLoggedIn, (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
-  console.log("logoout route");
+  console.log("logout route");
   req.session.destroy((err) => {
     if (err) {
       return res.redirect("/login");
@@ -97,7 +143,7 @@ app.get("/logout", (req, res) => {
 });
 
 // Login logic
-app.post("/login", async (req, res) => {
+app.post("/login", csrfProtection, async (req, res) => {
   console.log("login logic route");
   const { email, password } = req.body;
   try {
@@ -130,8 +176,6 @@ function isValidEmail(email) {
   return re.test(String(email).toLowerCase());
 }
 
-app.use(express.json());
-
 // Multer configuration for file upload
 const storage = multer.diskStorage({
   destination: "uploads/",
@@ -157,7 +201,7 @@ app.post(
       const { Name, ContactNo, category, Item, DateFound, Description } =
         req.body;
       let imageUrl = "";
-      if (req.file) imageUrl = req.file.path.replace(/\\/g, "/"); // Replace backslashes with forward slashes
+      if (req.file) imageUrl = req.file.path.replace(/\\/g, "/");
 
       const foundItem = new FoundItem({
         name: Name,
@@ -190,11 +234,12 @@ app.post(
   isLoggedIn,
   upload.single("Image"),
   async (req, res) => {
+    console.log(req.body);
     try {
       const { Name, ContactNo, category, Item, DateLost, Description } =
         req.body;
       let imageUrl = "";
-      if (req.file) imageUrl = req.file.path.replace(/\\/g, "/"); // Replace backslashes with forward slashes
+      if (req.file) imageUrl = req.file.path.replace(/\\/g, "/");
 
       const lostItem = new LostItem({
         name: Name,
@@ -206,7 +251,6 @@ app.post(
         image: imageUrl,
         userEmail: req.session.loggedInUser.email,
       });
-
       await lostItem.save();
 
       res.redirect(`/results?category=${category}&item=${Item}&type=lost`);
