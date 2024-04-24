@@ -67,8 +67,13 @@ app.use(
   helmet({
     contentSecurityPolicy: {
       directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'"],
+        defaultSrc: ["'self'", "https://ka-f.fontawesome.com/releases/"],
+        scriptSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          "https://kit.fontawesome.com/",
+          "https://ka-f.fontawesome.com/",
+        ],
       },
     },
   })
