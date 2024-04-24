@@ -16,10 +16,7 @@ const crypto = require("crypto");
 const cors = require("cors");
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(process.env.MONGODB_URI);
 
 app.use(
   session({
@@ -195,6 +192,7 @@ app.post(
   "/reportFound",
   isLoggedIn,
   upload.single("Image"),
+  csrfProtection,
   async (req, res) => {
     try {
       const { Name, ContactNo, category, Item, DateFound, Description } =
@@ -232,6 +230,7 @@ app.post(
   "/reportLost",
   isLoggedIn,
   upload.single("Image"),
+  csrfProtection,
   async (req, res) => {
     console.log(req.body);
     try {

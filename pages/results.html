@@ -56,6 +56,9 @@
           const year = date.getFullYear();
 
           const formattedDate = `${day}-${month}-${year}`;
+          if (formattedDate == undefined) {
+            formattedDate = "Not Mentioned";
+          }
           itemElement.innerHTML = `
             <p>Name: ${data.name}</p>
             <p>Contact No: ${data.contactNo}</p>
@@ -64,7 +67,7 @@
             <p>Item: ${data.item}</p>
             <p>Date: ${formattedDate}</p>
             <p>Description: ${data.description}</p>
-            <img src="${data.image}" alt="Item Image" width="200" height="auto">
+            <img src="${data.image}" alt="No Image Uploaded for the Item" width="200" height="auto">
             <!-- Add more properties as needed -->
         `;
           searchResultsContainer.appendChild(itemElement);
