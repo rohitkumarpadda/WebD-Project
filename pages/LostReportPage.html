@@ -83,7 +83,7 @@
 
             <label for="ContactNo">Mobile No.:</label><br />
             <input
-              type="text"
+              type="number"
               id="ContactNo"
               name="ContactNo"
               placeholder="Enter Mobile No."
@@ -136,6 +136,48 @@
         .then((data) => {
           document.querySelector('input[name="_csrf"]').value = data.csrfToken;
         });
+      document
+        .getElementById("category")
+        .addEventListener("change", function () {
+          let itemLabel = document.querySelector("label[for='Item']");
+          if (this.value === "IDCard") {
+            document.getElementById("Item").placeholder = "ID No.";
+            itemLabel.textContent = "ID No. : ";
+          } else {
+            document.getElementById("Item").placeholder = "Enter Lost Item";
+            itemLabel.textContent = "Item : ";
+          }
+        });
+
+      function isValidInput(input) {
+        const re = /^[a-zA-Z0-9 @,.()"'-]*$/;
+        return re.test(input);
+      }
+
+      let form = document.querySelector("form");
+      form.addEventListener("submit", function (event) {
+        let inputs = form.querySelectorAll(
+          'input[type="text"], input[type="email"], textarea'
+        );
+        for (let i = 0; i < inputs.length; i++) {
+          if (inputs[i].name === "ContactNo" && inputs[i].value.length !== 10) {
+            event.preventDefault();
+            let errorMessage = document.createElement("div");
+            errorMessage.className = "error-message";
+            errorMessage.textContent = "Contact number must be 10 digits long.";
+            inputs[i].parentNode.insertBefore(errorMessage, inputs[i]);
+            return;
+          } else if (!isValidInput(inputs[i].value)) {
+            event.preventDefault();
+            let errorMessage = document.createElement("div");
+            errorMessage.className = "error-message";
+            errorMessage.textContent =
+              "Invalid input. Only letters, spaces, @, commas, full stop, (), quotes, and digits are allowed.";
+            inputs[i].parentNode.insertBefore(errorMessage, inputs[i]);
+            return;
+          }
+        }
+      });
     </script>
   </body>
 </html>
