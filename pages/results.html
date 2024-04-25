@@ -4,19 +4,51 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Search Results</title>
+    <link rel="stylesheet" href="/css/resultsStylesheet.css" />
+    <script
+      src="https://kit.fontawesome.com/c5a92afa13.js"
+      crossorigin="anonymous"
+    ></script>
     <style>
       .search-item {
+        margin-top: 100px;
         margin-bottom: 20px;
-        padding: 10px;
+        /* padding: 10px; */
         border: 1px solid #ccc;
         border-radius: 5px;
+
         background-color: #f9f9f9;
       }
     </style>
   </head>
   <body>
+    <nav>
+      <div class="container">
+        <div class="logo">
+          <!-- <p style="color: white;">IIITA</p> -->
+          <a href="/"
+            ><img
+              src="/assets/img/iiitaLogo.png"
+              alt="IIITA"
+              style="
+                height: 90px;
+                cursor: pointer;
+                width: 90px;
+                margin-left: 50px;
+                margin-top: 10px;
+              "
+          /></a>
+        </div>
+        <div class="nav">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="#AbtUs">About Us</a></li>
+            <li><a href="/logout">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
     <div id="searchResults"></div>
-    <nav></nav>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         // Extract search parameters from URL
@@ -30,19 +62,32 @@
           .then((response) => response.json())
           .then((data) => {
             // Display search results
-            displaySearchResults(data);
+            displaySearchResults(data, type);
           })
           .catch((error) =>
             console.error("Error fetching search results:", error)
           );
       });
 
-      function displaySearchResults(data) {
+      function displaySearchResults(data, type) {
         const searchResultsContainer = document.getElementById("searchResults");
         searchResultsContainer.innerHTML = "";
 
         if (data.length === 0) {
-          searchResultsContainer.innerHTML = "<p>No results found.</p>";
+          let message = "";
+          if (type === "lost") {
+            message =
+              "No items found!!! Don't worry, someone will find it for you.";
+          } else if (type === "found") {
+            message =
+              "No found items match your search. Keep checking, it might show up soon.";
+          } else {
+            message = "No results found!!!";
+          }
+
+          searchResultsContainer.innerHTML =
+            `<div class='NoResultContainer'><p class='NoResult'><b>${message}</b></p>` +
+            "<img class='NoResultImg' src='/assets/img/NoResultFound1.avif' alt='Img'></div>";
           return;
         }
 
@@ -74,6 +119,33 @@
         });
       }
     </script>
-    <footer></footer>
+    <footer>
+      <div class="footernav" id="about_us">
+        <div class="social_icons">
+          <a href="https://www.facebook.com/iiitall/"
+            ><i class="fa-brands fa-facebook"></i
+          ></a>
+          <a href="https://www.instagram.com/iiit.allahabad/"
+            ><i class="fa-brands fa-instagram"></i
+          ></a>
+          <a href="https://twitter.com/iiita_official?lang=en"
+            ><i class="fa-brands fa-twitter"></i
+          ></a>
+        </div>
+        <div class="footernav">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/login">Login</a></li>
+            <li>
+              <a href="https://www.iiita.ac.in/" target="_blank">About IIITA</a>
+            </li>
+            <!-- <li><a href="">Contact Us</a></li> -->
+          </ul>
+        </div>
+      </div>
+      <div class="footerbottom">
+        <p>Copyright &copy;2023</p>
+      </div>
+    </footer>
   </body>
 </html>
