@@ -17,7 +17,7 @@ const cors = require("cors");
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI);
-
+app.set("trust proxy", 1);
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
