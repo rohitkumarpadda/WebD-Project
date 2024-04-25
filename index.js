@@ -148,10 +148,6 @@ app.post("/login", csrfProtection, async (req, res) => {
   console.log("login logic route");
   const { email, password } = req.body;
   try {
-    if (!isValidEmail(email)) {
-      return res.status(400).send("Invalid email format");
-    }
-
     const user = await LoginData.findOne({ email: { $eq: email } });
 
     if (!user || !bcrypt.compareSync(password, user.password)) {
@@ -169,13 +165,6 @@ app.post("/login", csrfProtection, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-
-// Middleware to validate email format
-function isValidEmail(email) {
-  const re =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(String(email).toLowerCase());
-}
 
 // Multer configuration for file upload
 const storage = multer.diskStorage({
