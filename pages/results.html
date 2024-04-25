@@ -100,7 +100,7 @@
           const month = (date.getMonth() + 1).toString().padStart(2, "0");
           const year = date.getFullYear();
 
-          const formattedDate = `${day}-${month}-${year}`;
+          let formattedDate = `${day}-${month}-${year}`;
           if (formattedDate == "01-01-1970") {
             formattedDate = "Not Mentioned";
           }
