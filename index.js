@@ -23,7 +23,7 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    //cookie: { secure: true },add in production
+    cookie: { secure: true },
     cookie: { maxAge: 1000 * 60 * 30 },
   })
 );
