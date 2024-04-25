@@ -51,7 +51,14 @@ function csrfProtection(req, res, next) {
   const submittedToken =
     req.body._csrf || req.query._csrf || req.headers["x-csrf-token"];
   if (!submittedToken || submittedToken !== csrfToken) {
-    return res.status(403).send("CSRF token mismatch");
+    return res.status(403).send(
+      `
+        <script>
+          alert('Session Expired, Reload the page again'); 
+          window.location.href = '/logout';
+        </script>
+      `
+    );
   }
 
   next();
