@@ -123,6 +123,11 @@ app.get("/afterlogin", isLoggedIn, (req, res) => {
   res.sendFile(path.join(__dirname, "pages/AfterLoginPage1.html"));
 });
 
+app.get("/viewreports", isLoggedIn, (req, res) => {
+  console.log("view report route");
+  res.sendFile(path.join(__dirname, "pages/viewReports.html"));
+});
+
 app.get("/reportLost", isLoggedIn, (req, res) => {
   console.log("lost form route");
   res.sendFile(path.join(__dirname, "pages/LostReportPage.html"));
@@ -294,5 +299,18 @@ app.get("/searchItems", isLoggedIn, async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.get("/viewreportsresults", isLoggedIn, async (req, res) => {
+  try {
+    const userEmail = req.session.loggedInUser.email;
+    const lostItems = await LostItem.find({ userEmail: userEmail });
+    const foundItems = await FoundItem.find({ userEmail: userEmail });
+
+    res.json({ lostItems, foundItems });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
   }
 });
