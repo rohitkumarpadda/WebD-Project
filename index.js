@@ -27,6 +27,7 @@ app.use(
   })
 );
 
+//Middlewares
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
@@ -95,10 +96,6 @@ app.use(rateLimiter);
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
-});
-
 const isLoggedIn = (req, res, next) => {
   if (req.session.loggedInUser) {
     next();
@@ -106,6 +103,12 @@ const isLoggedIn = (req, res, next) => {
     res.redirect("/login");
   }
 };
+
+// Server
+app.listen(process.env.PORT, () => {
+  console.log(`Server is up and running`);
+});
+
 
 // Routes
 app.get("/", (req, res) => {
@@ -302,6 +305,8 @@ app.get("/searchItems", isLoggedIn, async (req, res) => {
   }
 });
 
+
+// Viewing reports
 app.get("/viewreportsresults", isLoggedIn, async (req, res) => {
   try {
     const userEmail = req.session.loggedInUser.email;
