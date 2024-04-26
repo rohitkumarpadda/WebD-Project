@@ -1,155 +1,131 @@
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Report Found</title>
 
-    <link rel="stylesheet" href="/css/RegisterPageStylesheet.css" />
-  </head>
-  <body style="width: 100%">
-    <div class="maindiv">
-      <nav>
-        <div class="container">
-          <div class="logo">
-            <a href="/"
-              ><img
-                src="/assets/img/iiitaLogo.png"
-                alt="IIITA"
-                style="
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Report Found</title>
+
+  <link rel="stylesheet" href="/css/RegisterPageStylesheet.css" />
+</head>
+
+<body style="width: 100%">
+  <div class="maindiv">
+    <nav>
+      <div class="container">
+        <div class="logo">
+          <a href="/"><img src="/assets/img/iiitaLogo.png" alt="IIITA" style="
                   height: 90px;
                   cursor: pointer;
                   width: 90px;
                   margin-left: 50px;
                   margin-top: 10px;
-                "
-            /></a>
-          </div>
-          <div class="nav">
-            <ul>
-              <li><a href="/">Home</a></li>
-              <li><a href="index.html#AbtUs">About Us</a></li>
-              <li><a href="/logout">Logout</a></li>
-            </ul>
-          </div>
+                " /></a>
         </div>
-      </nav>
-      <div class="RegisterDiv">
-        <div class="RegisterImg">
-          <img src="/assets/img/RegistrationImage.avif" alt="Img" />
-        </div>
-        <div class="formR">
-          <p style="font-size: 35px; color: rgb(11, 11, 40)">
-            Report the Found Item here
-          </p>
-          <form
-            action="/reportFound"
-            method="post"
-            enctype="multipart/form-data"
-          >
-            <label for="Name">Name : </label><br />
-            <input
-              type="text"
-              id="Name"
-              name="Name"
-              placeholder="Your Name Here"
-              required
-            />
-            <br /><br />
-            <label for="ContactNo">Mobile No. : </label><br />
-            <input
-              type="number"
-              id="ContactNo"
-              name="ContactNo"
-              placeholder="Enter Mobile No."
-              required
-            />
-            <br /><br />
-            <label for="category">Select category : </label><br />
-            <select id="category" name="category" required>
-              <option value="electronics">Electronics</option>
-              <option value="IDCard">ID Card</option>
-              <option value="Stationary">Stationary Items</option>
-              <option value="others">Others</option>
-            </select>
-            <br /><br />
-            <label for="Item">Item : </label><br />
-            <input
-              type="text"
-              id="Item"
-              name="Item"
-              placeholder="Enter Found Item"
-              required
-            />
-            <br /><br />
-            <label for="DateFound">When the Item was Found</label><br />
-            <input type="date" id="DateFound" name="DateFound" />
-            <br /><br />
-            <label for="Description">Found where? : </label><br />
-            <textarea
-              name="Description"
-              id="Description"
-              cols="30"
-              rows="10"
-              placeholder="Enter the details where did you find"
-            ></textarea>
-            <br /><br />
-            <label for="Image">Upload an Image of Found Item : </label><br />
-            <input type="file" id="Image" name="Image" />
-            <br /><br /><br /><br />
-            <input type="hidden" name="_csrf" value="" />
-            <button class="Button" style="margin-left: 160px">Submit</button>
-          </form>
+        <div class="nav">
+          <ul style="margin-right: 80px;">
+            <li><a href="/">Home</a></li>
+            <li class="dropdown">
+              <a href="javascript:void(0)" class="dropbtn">User</a>
+              <div class="dropdown-content">
+                <a href="/viewreports">View Reports</a>
+                <a href="/logout">Logout</a>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
+    </nav>
+    <div class="RegisterDiv">
+      <div class="RegisterImg">
+        <img src="/assets/img/RegistrationImage.avif" alt="Img" />
+      </div>
+      <div class="formR">
+        <p style="font-size: 35px; color: rgb(11, 11, 40)">
+          Report the Found Item here
+        </p>
+        <form action="/reportFound" method="post" enctype="multipart/form-data">
+          <label for="Name">Name : </label><br />
+          <input type="text" id="Name" name="Name" placeholder="Your Name Here" required />
+          <br /><br />
+          <label for="ContactNo">Mobile No. : </label><br />
+          <input type="number" id="ContactNo" name="ContactNo" placeholder="Enter Mobile No." required />
+          <br /><br />
+          <label for="category">Select category : </label><br />
+          <select id="category" name="category" required>
+            <option value="electronics">Electronics</option>
+            <option value="IDCard">ID Card</option>
+            <option value="Stationary">Stationary Items</option>
+            <option value="others">Others</option>
+          </select>
+          <br /><br />
+          <label for="Item">Item : </label><br />
+          <input type="text" id="Item" name="Item" placeholder="Enter Found Item" required />
+          <br /><br />
+          <label for="DateFound">When the Item was Found</label><br />
+          <input type="date" id="DateFound" name="DateFound" />
+          <br /><br />
+          <label for="Description">Found where? : </label><br />
+          <textarea name="Description" id="Description" cols="30" rows="10"
+            placeholder="Enter the details where did you find"></textarea>
+          <br /><br />
+          <label for="Image">Upload an Image of Found Item : </label><br />
+          <input type="file" id="Image" name="Image" />
+          <br /><br /><br /><br />
+          <input type="hidden" name="_csrf" value="" />
+          <button class="Button" style="margin-left: 160px">Submit</button>
+        </form>
+      </div>
     </div>
-    <script>
-      fetch("/csrf-token")
-        .then((response) => response.json())
-        .then((data) => {
-          document.querySelector('input[name="_csrf"]').value = data.csrfToken;
-        });
-      document
-        .getElementById("category")
-        .addEventListener("change", function () {
-          let itemLabel = document.querySelector("label[for='Item']");
-          if (this.value === "IDCard") {
-            document.getElementById("Item").placeholder = "ID No.";
-            itemLabel.textContent = "ID No. : ";
-          } else {
-            document.getElementById("Item").placeholder = "Enter Lost Item";
-            itemLabel.textContent = "Item : ";
-          }
-        });
-      function isValidInput(input) {
-        const re = /^[a-zA-Z0-9 @,.()"'-]*$/;
-        return re.test(input);
-      }
-
-      let form = document.querySelector("form");
-      form.addEventListener("submit", function (event) {
-        let inputs = form.querySelectorAll(
-          'input[type="text"], input[type="email"], textarea, input[type="number"]'
-        );
-        for (let i = 0; i < inputs.length; i++) {
-          if (inputs[i].name === "ContactNo" && inputs[i].value.length !== 10) {
-            event.preventDefault();
-            let errorMessage = document.createElement("div");
-            errorMessage.className = "error-message";
-            errorMessage.textContent = "Contact number must be 10 digits long.";
-            inputs[i].parentNode.insertBefore(errorMessage, inputs[i]);
-            return;
-          } else if (!isValidInput(inputs[i].value)) {
-            event.preventDefault();
-            let errorMessage = document.createElement("div");
-            errorMessage.className = "error-message";
-            errorMessage.textContent =
-              "Invalid input. Only letters, spaces, @, commas, full stop, (), quotes, and digits are allowed.";
-            inputs[i].parentNode.insertBefore(errorMessage, inputs[i]);
-            return;
-          }
+  </div>
+  <script>
+    fetch("/csrf-token")
+      .then((response) => response.json())
+      .then((data) => {
+        document.querySelector('input[name="_csrf"]').value = data.csrfToken;
+      });
+    document
+      .getElementById("category")
+      .addEventListener("change", function () {
+        let itemLabel = document.querySelector("label[for='Item']");
+        if (this.value === "IDCard") {
+          document.getElementById("Item").placeholder = "ID No.";
+          itemLabel.textContent = "ID No. : ";
+        } else {
+          document.getElementById("Item").placeholder = "Enter Lost Item";
+          itemLabel.textContent = "Item : ";
         }
       });
-    </script>
-  </body>
+    function isValidInput(input) {
+      const re = /^[a-zA-Z0-9 @,.()"'-]*$/;
+      return re.test(input);
+    }
+
+    let form = document.querySelector("form");
+    form.addEventListener("submit", function (event) {
+      let inputs = form.querySelectorAll(
+        'input[type="text"], input[type="email"], textarea, input[type="number"]'
+      );
+      for (let i = 0; i < inputs.length; i++) {
+        if (inputs[i].name === "ContactNo" && inputs[i].value.length !== 10) {
+          event.preventDefault();
+          let errorMessage = document.createElement("div");
+          errorMessage.className = "error-message";
+          errorMessage.textContent = "Contact number must be 10 digits long.";
+          inputs[i].parentNode.insertBefore(errorMessage, inputs[i]);
+          return;
+        } else if (!isValidInput(inputs[i].value)) {
+          event.preventDefault();
+          let errorMessage = document.createElement("div");
+          errorMessage.className = "error-message";
+          errorMessage.textContent =
+            "Invalid input. Only letters, spaces, @, commas, full stop, (), quotes, and digits are allowed.";
+          inputs[i].parentNode.insertBefore(errorMessage, inputs[i]);
+          return;
+        }
+      }
+    });
+  </script>
+</body>
+
 </html>

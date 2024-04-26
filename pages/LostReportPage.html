@@ -26,15 +26,20 @@
             /></a>
           </div>
           <div class="nav">
-            <ul>
+            <ul style="margin-right: 80px;">
               <li><a href="/">Home</a></li>
-              <li><a href="index.html#AbtUs">About Us</a></li>
-              <li><a href="/logout">logout</a></li>
+              <li class="dropdown">
+                <a href="javascript:void(0)" class="dropbtn">User</a>
+                <div class="dropdown-content">
+                  <a href="/viewreports">View Reports</a>
+                  <a href="/logout">Logout</a>
+                </div>
+              </li>
             </ul>
           </div>
         </div>
       </nav>
-      <div class="RecentlyLost">
+      <!-- <div class="RecentlyLost">
         <div class="RecentlyLostHeading">
           <p style="margin-top: 40px; font-size: 30px">
             Recently lost Items...
@@ -51,7 +56,7 @@
             <p>zdnidsjdh</p>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="CantFindYourItem">
         <p style="font-size: 40px">Can't Find Which you are looking for!!!</p>
         <p style="font-size: 22px; color: #666666">

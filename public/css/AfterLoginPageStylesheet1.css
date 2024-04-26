@@ -114,15 +114,109 @@ nav li a:hover {
 }
 
 .dropdown-content {
+  /* font-size: 10px; */
   display: none;
   position: absolute;
   background-color: #12006a;
-  min-width: 160px;
+  min-width: 200px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   padding: 12px 16px;
   z-index: 1;
 }
-
+.dropdown-content a{
+  font-size: 15px;
+}
 .dropdown:hover .dropdown-content {
   display: block;
+}
+.footernav {
+  margin: 30px 0;
+}
+
+.footernav ul {
+  display: flex;
+  justify-content: center;
+  list-style-type: none;
+}
+
+.footernav ul li a {
+  color: white;
+  margin: 20px;
+  text-decoration: none;
+  font-size: 1.3em;
+  opacity: 0.7;
+  transition: 0.5s;
+}
+
+.footernav ul li a:hover {
+  opacity: 1;
+}
+
+.footerbottom {
+  padding: 20px;
+  text-align: center;
+}
+
+.footerbottom p {
+  color: white;
+}
+
+@media (max-width: 700px) {
+  .footernav ul {
+    flex-direction: column;
+    align-items: center; /* Centering links vertically */
+  }
+
+  .footernav ul li {
+    text-align: center;
+    margin: 10px;
+  }
+
+  .social_icons a {
+    padding: 8px;
+    margin: 4px;
+  }
+
+  .footernav ul li a {
+    width: 100%; /* Ensure links take full width */
+  }
+}
+footer {
+  background-color: rgb(11, 11, 40); /* Same as navigation bar */
+  padding: 20px 0;
+  color: white;
+  text-align: center;
+}
+.footer_container {
+  width: 100%;
+  padding: 70px 30px 20px;
+}
+
+.social_icons {
+  display: flex;
+  justify-content: center;
+}
+
+.social_icons a {
+  text-decoration: none;
+  padding: 10px;
+  background-color: white;
+  margin: 10px;
+  border-radius: 50%;
+}
+
+.social_icons a i {
+  font-size: 2em;
+  color: black;
+  opacity: 0, 9;
+}
+
+.social_icons a:hover {
+  background-color: #111;
+  transition: 0.5s;
+}
+
+.social_icons a:hover i {
+  color: white;
+  transition: 0.5s;
 }

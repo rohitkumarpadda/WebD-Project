@@ -13,12 +13,27 @@
       .search-item {
         margin-top: 100px;
         margin-bottom: 20px;
-        /* padding: 10px; */
-        border: 1px solid #ccc;
-        border-radius: 5px;
-
+        border: 2px solid #ccc;
+        border-radius: 10px;
         background-color: #f9f9f9;
+        width: calc(50% - 20px); 
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); 
+        margin-right: 20px; 
+        margin-left: 20px;
+        padding: 50px;
+        align-items: center;
+        margin: auto;
+        width: 50%;
+        margin-bottom: 40px;
+        /* border: 3px solid green;
+        padding: 10px; */
+        background-image: url(/assets/img/BackGroundReport.webp);
       }
+
+      .search-item p{
+        margin-left: 20px;
+      }
+
     </style>
   </head>
   <body>
@@ -40,14 +55,20 @@
           /></a>
         </div>
         <div class="nav">
-          <ul>
+          <ul style="margin-right: 80px;">
             <li><a href="/">Home</a></li>
-            <li><a href="#AbtUs">About Us</a></li>
-            <li><a href="/logout">Logout</a></li>
+            <li class="dropdown">
+              <a href="javascript:void(0)" class="dropbtn">User</a>
+              <div class="dropdown-content">
+                <a href="/viewreports">View Reports</a>
+                <a href="/logout">Logout</a>
+              </div>
+            </li>
           </ul>
         </div>
       </div>
     </nav>
+    <div class="UpText" style="margin-top: 100px;"><B>Showing up some matching results...</B></div>
     <div id="searchResults"></div>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
@@ -77,7 +98,7 @@
           let message = "";
           if (type === "lost") {
             message =
-              "No items found!!! Don't worry, someone will find it for you.";
+              "Opps!!!! No items found..<br><br><br> Don't worry, your data has been recorded and when someone finds it, we will notify you";
           } else if (type === "found") {
             message =
               "No found items match your search. Keep checking, it might show up soon.";
@@ -90,7 +111,7 @@
             "<img class='NoResultImg' src='/assets/img/NoResultFound1.avif' alt='Img'></div>";
           return;
         }
-
+        
         data.forEach((data) => {
           const itemElement = document.createElement("div");
           itemElement.classList.add("search-item");
@@ -105,13 +126,13 @@
             formattedDate = "Not Mentioned";
           }
           itemElement.innerHTML = `
-            <p>Reported By: ${data.name}</p>
-            <p>Contact No: ${data.contactNo}</p>
-            <p>Email: ${data.userEmail}</p>
-            <p>Category: ${data.category}</p>
-            <p>Item: ${data.item}</p>
-            <p>Date: ${formattedDate}</p>
-            <p>Description: ${data.description}</p>
+            <p style="text-align:center:"><b>Reported By:</b> <p style="font-size:25px;">${data.name}</p></p>
+            <p><b>Contact No: </b>${data.contactNo}</p>
+            <p><b>Email: </b>${data.userEmail}</p>
+            <p><b>Category: </b>${data.category}</p>
+            <p><b>Item: </b>${data.item}</p>
+            <p><b>Date: </b>${formattedDate}</p>
+            <p><b>Description: </b>${data.description}</p>
             <img src="${data.image}" alt="No Image Uploaded for the Item" width="200" height="auto">
             <!-- Add more properties as needed -->
         `;

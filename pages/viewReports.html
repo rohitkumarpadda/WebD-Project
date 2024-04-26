@@ -13,11 +13,26 @@
       .search-item {
         margin-top: 100px;
         margin-bottom: 20px;
-        /* padding: 10px; */
-        border: 1px solid #ccc;
-        border-radius: 5px;
-
+        border: 2px solid #ccc;
+        border-radius: 10px;
         background-color: #f9f9f9;
+        width: calc(50% - 20px); 
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); 
+        margin-right: 20px; 
+        margin-left: 20px;
+        padding: 50px;
+        /* : 20px; */
+        align-items: center;
+        margin: auto;
+        width: 50%;
+        margin-bottom: 30px;
+        /* border: 3px solid green;
+        padding: 10px; */
+        background-image: url(/assets/img/BackGroundReport.webp);
+      }
+
+      .search-item p{
+        margin-left: 20px;
       }
     </style>
   </head>
@@ -40,21 +55,26 @@
           /></a>
         </div>
         <div class="nav">
-          <ul>
+          <ul style="margin-right: 80px;">
             <li><a href="/">Home</a></li>
-            <li><a href="#AbtUs">About Us</a></li>
-            <li><a href="/logout">Logout</a></li>
+            <li class="dropdown">
+              <a href="javascript:void(0)" class="dropbtn">User</a>
+              <div class="dropdown-content">
+                <a href="/viewreports">View Reports</a>
+                <a href="/logout">Logout</a>
+              </div>
+            </li>
           </ul>
         </div>
       </div>
     </nav>
     <div>
-      <h2>Lost Items</h2>
+      <h2 style="margin-top: 100px; text-align: center; font-size: 30px;">Lost Items</h2>
       <div id="lostItems"></div>
     </div>
 
     <div>
-      <h2>Found Items</h2>
+      <h2 style="margin-top: 100px; text-align: center; font-size: 30px;">Found Items</h2>
       <div id="foundItems"></div>
     </div>
 
@@ -96,10 +116,10 @@
             formattedDate = "Not Mentioned";
           }
           itemElement.innerHTML = `
-                    <p>Category: ${item.category}</p>
-                    <p>Item: ${item.item}</p>
-                    <p>Date: ${formattedDate}</p>
-                    <p>Description: ${item.description}</p>
+                    <p><b>Category:</b> ${item.category}</p>
+                    <p><b>Item: </b>${item.item}</p>
+                    <p><b>Date: </b>${formattedDate}</p>
+                    <p><b>Description: </b>${item.description}</p>
                     <img src="${item.image}" alt="No Image Uploaded for the Item" width="200" height="auto">
                     <!-- Add more properties as needed -->
                 `;
