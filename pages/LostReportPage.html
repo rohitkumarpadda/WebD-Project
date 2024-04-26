@@ -98,8 +98,8 @@
             <label for="category">Select category:</label><br />
             <select id="category" name="category" required>
               <option value="electronics">Electronics</option>
-              <option value="IDCard">ID Card</option>
-              <option value="Stationary">Stationary Items</option>
+              <option value="idcard">ID Card</option>
+              <option value="stationary">Stationary Items</option>
               <option value="others">Others</option></select
             ><br /><br />
 
@@ -145,7 +145,7 @@
         .getElementById("category")
         .addEventListener("change", function () {
           let itemLabel = document.querySelector("label[for='Item']");
-          if (this.value === "IDCard") {
+          if (this.value === "idcard") {
             document.getElementById("Item").placeholder = "ID No.";
             itemLabel.textContent = "ID No. : ";
           } else {
