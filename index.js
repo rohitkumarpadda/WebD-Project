@@ -109,7 +109,6 @@ app.listen(process.env.PORT, () => {
   console.log(`Server is up and running`);
 });
 
-
 // Routes
 app.get("/", (req, res) => {
   console.log("index page route");
@@ -304,7 +303,6 @@ app.get("/searchItems", isLoggedIn, async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
 
 // Viewing reports
 app.get("/viewreportsresults", isLoggedIn, async (req, res) => {
